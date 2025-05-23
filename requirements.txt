@@ -1,0 +1,7 @@
+python-dotenv
+httpx
+fastapi
+uvicorn
+pydantic
+
+discord.py
