@@ -187,9 +187,10 @@ class Bot(commands.Bot):
         
         max_retries = 5
         retry_count = 0
-    
+        url = "http://127.0.0.1:8080/UpdateStatus"
+        
         while True:
-            url = "http://127.0.0.1:8080/UpdateStatus"
+            
             try:
                 async with httpx.AsyncClient() as client: # Use AsyncClient for better practice
                     r = await client.get(url) # Await the httpx get request
