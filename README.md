@@ -16,10 +16,12 @@ AMV is an automated testing framework designed to validate Minecraft mods throug
 
 ## Current Development Status
 
-The project is in Phase 1 (Alpha), focusing on:
-- Core system setup and infrastructure
-- Basic Discord bot integration
-- VM and server panel control implementation
+The project is in Phase 2 (Alpha), focusing on:
+- Connect to Proxmox API
+- Implement VM management
+- Connect to Server Panel API
+- Implement server management
+- Set up SSH connections
 
 ## End Goals
 
@@ -41,6 +43,7 @@ AMV aims to provide:
 ## Project Timeline
 
 For detailed development phases and timeline, see [TODO.md](TODO.md)
+For the development checklist, see [CHECKLIST.md](CHECKLIST.md)
 
 ## Contributing
 

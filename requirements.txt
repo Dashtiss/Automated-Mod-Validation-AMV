@@ -1,7 +1,17 @@
-python-dotenv
-httpx
+# API and Web Framework
 fastapi
 uvicorn
+httpx
 pydantic
+python-dotenv
 
+# Discord Bot Integration
 discord.py
+
+# Pterodactyl Panel Integration
+py-dactyl
+
+# Proxmox and SSH Management
+proxmoxer
+paramiko
+openssh_wrapper
