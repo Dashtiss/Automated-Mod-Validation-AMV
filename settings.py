@@ -1,32 +1,12 @@
 import textwrap
 from dotenv import load_dotenv
 import os
+import httpx
 
 
-load_dotenv()
-
-VERSION = "0.0.0-alpha.0-dev"
-VERSION_NAME = "Alpha"
-
-AUTHORS = ["Dashtiss", "Lightning-Modding"]
-REPO_URL = "https://github.com/Lightning-Modding/Pterodactyl-Proxy-Manager"
 
 
-DEVELOPMENT = True
 
-DEBUG = False
-
-
-BOTTOKEN = os.getenv('BOTTOKEN', None)
-CHANNEL_ID = os.getenv('CHANNEL_ID', None)
-CHECKER_REGEX = os.getenv('CHECKER_REGEX', None)
-
-
-PTERODACTYL_API_URL = os.getenv('PTERODACTYL_API_URL', None)
-PTERODACTYL_API_KEY = os.getenv('PTERODACTYL_API_KEY', None)
-
-PROXMOX_API_URL = os.getenv('PROXMOX_API_URL', None)
-PROXMOX_API_KEY = os.getenv('PROXMOX_API_KEY', None)
 
 def format_title(info: dict) -> str:
     """
@@ -72,3 +52,59 @@ def format_title(info: dict) -> str:
 
     formatted_title = ascii_art_top + additional_info_block + closing_line
     return formatted_title.strip() # Use strip to remove leading/trailing whitespace caused by triple quotes
+
+
+
+
+load_dotenv()
+
+VERSION = "0.0.0-alpha.0-dev"
+VERSION_NAME = "Alpha"
+
+AUTHORS = ["Dashtiss", "Lightning-Modding"]
+REPO_URL = "https://github.com/Lightning-Modding/Pterodactyl-Proxy-Manager"
+
+
+DEVELOPMENT = True
+
+DEBUG = True
+
+MOD_ID = os.getenv('MOD_ID', None)
+
+
+# Required environment variables
+BOTTOKEN = os.getenv('BOTTOKEN', None)
+CHANNEL_ID = os.getenv('CHANNEL_ID', None)
+CHECKER_REGEX = os.getenv('CHECKER_REGEX', None)
+
+# Pterodactyl settings (required)
+PTERODACTYL_API_URL = os.getenv('PTERODACTYL_API_URL', None)
+PTERODACTYL_API_KEY = os.getenv('PTERODACTYL_API_KEY', None)
+PTERODACTYL_NEST_ID = os.getenv('PTERODACTYL_NEST_ID', None)
+PTERODACTYL_EGG_ID = os.getenv('PTERODACTYL_EGG_ID', None)
+
+# Proxmox settings (optional - currently disabled)
+PROXMOX_API_URL = os.getenv('PROXMOX_API_URL', 'disabled')
+PROXMOX_API_KEY = os.getenv('PROXMOX_API_KEY', 'disabled')
+
+
+# Variables that are not required for the engine to function and have default values
+SERVER_MEMORY_LIMIT = int(os.getenv('SERVER_MEMORY_LIMIT', 8192))  # Default to 8192 MB if not set
+SERVER_DISK_LIMIT = int(os.getenv('SERVER_DISK_LIMIT', 10240))  # Default to 10 GB if not set
+SERVER_CPU_LIMIT = int(os.getenv('SERVER_CPU_LIMIT', 400))  # Default to 100% if not set
+
+
+def getModProjectInfo() -> dict:
+    
+    API_URL = "https://api.modrinth.com/v2/"
+    
+    httpx_client = httpx.Client()
+    try:
+        response = httpx_client.get(f"{API_URL}project/{MOD_ID}")
+        response.raise_for_status()
+        return response.json()
+    except httpx.HTTPStatusError as e:
+        print(f"HTTP error occurred: {e.response.status_code} - {e.response.text}")
+
+
+MOD_INFO = getModProjectInfo()
