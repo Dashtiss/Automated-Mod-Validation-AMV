@@ -58,7 +58,7 @@ def format_title(info: dict) -> str:
 
 load_dotenv()
 
-VERSION = "0.0.0-alpha.0-dev"
+VERSION = "0.0.0-alpha.2"
 VERSION_NAME = "Alpha"
 
 AUTHORS = ["Dashtiss", "Lightning-Modding"]

@@ -8,9 +8,9 @@ from discord import Client
 from src.proxmox.manager import ProxmoxManager
 from src.pterodactyl.pterodactyl import PterodactylManager
 from src.discord_bot.bot import Bot
-
+import settings
 class AMVEngine:
-    def __init__(self, settings):
+    def __init__(self, settings: settings) -> None:
         """Initialize AMV Engine with configuration."""
         self.settings = settings
         self.app: FastAPI = FastAPI()
@@ -18,6 +18,10 @@ class AMVEngine:
         self.pterodactyl_manager: Optional[PterodactylManager] = None
         self.bot: Optional[Bot] = None
         self.logger = logging.getLogger(__name__)
+        self.stream_handler = logging.StreamHandler()
+        self.stream_handler.setLevel(logging.INFO)
+        self.logger.addHandler(self.stream_handler)
+        self.logger.setLevel(logging.INFO)
 
     async def initialize(self) -> None:
         """Initialize all components."""
@@ -35,7 +39,7 @@ class AMVEngine:
         try:
             self.pterodactyl_manager = PterodactylManager(
                 api_key=self.settings.PTERODACTYL_API_KEY,
-                api_url=self.settings.PTERODACTYL_API_URL,
+                base_url=self.settings.PTERODACTYL_API_URL,
                 egg_id=self.settings.PTERODACTYL_EGG_ID,
                 nest_id=self.settings.PTERODACTYL_NEST_ID,
                 server_name=self.settings.MOD_INFO["title"]
@@ -48,7 +52,7 @@ class AMVEngine:
     async def _init_bot(self) -> None:
         """Initialize Discord bot."""
         try:
-            self.bot = Bot(self.settings, logger=self.logger)
+            self.bot = Bot(self.settings, logger=self.logger, stream_handler=self.stream_handler)
             self.logger.info("Discord bot initialized successfully")
         except Exception as e:
             self.logger.error(f"Failed to initialize Discord bot: {e}")
