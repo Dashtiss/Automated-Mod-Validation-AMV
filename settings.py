@@ -1,12 +1,32 @@
 import textwrap
 from dotenv import load_dotenv
 import os
-import httpx
 
 
+load_dotenv()
+
+VERSION = "0.0.0-alpha.0-dev"
+VERSION_NAME = "Alpha"
+
+AUTHORS = ["Dashtiss", "Lightning-Modding"]
+REPO_URL = "https://github.com/Lightning-Modding/Pterodactyl-Proxy-Manager"
 
 
+DEVELOPMENT = True
 
+DEBUG = False
+
+
+BOTTOKEN = os.getenv('BOTTOKEN', None)
+CHANNEL_ID = os.getenv('CHANNEL_ID', None)
+CHECKER_REGEX = os.getenv('CHECKER_REGEX', None)
+
+
+PTERODACTYL_API_URL = os.getenv('PTERODACTYL_API_URL', None)
+PTERODACTYL_API_KEY = os.getenv('PTERODACTYL_API_KEY', None)
+
+PROXMOX_API_URL = os.getenv('PROXMOX_API_URL', None)
+PROXMOX_API_KEY = os.getenv('PROXMOX_API_KEY', None)
 
 def format_title(info: dict) -> str:
     """
@@ -51,6 +71,7 @@ def format_title(info: dict) -> str:
         additional_info_block += empty_line # Add empty line after each info
 
     formatted_title = ascii_art_top + additional_info_block + closing_line
+<<<<<<< HEAD
     return formatted_title.strip() # Use strip to remove leading/trailing whitespace caused by triple quotes
 
 
@@ -108,3 +129,6 @@ def getModProjectInfo() -> dict:
 
 
 MOD_INFO = getModProjectInfo()
+=======
+    return formatted_title.strip() # Use strip to remove leading/trailing whitespace caused by triple quotes
+>>>>>>> parent of e19d6bd (feat: Implement Pterodactyl server management and utility functions)

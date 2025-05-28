@@ -335,6 +335,7 @@ dist
 
 # My Added Files
 test.py
+<<<<<<< HEAD
 installScript.sh
 .vscode/*
 !.vscode/settings.json
@@ -348,3 +349,6 @@ installScript.sh
 
 # Built Visual Studio Code Extensions
 *.vsix
+=======
+InstallScript.sh
+>>>>>>> parent of e19d6bd (feat: Implement Pterodactyl server management and utility functions)
