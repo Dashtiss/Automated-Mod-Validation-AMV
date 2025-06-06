@@ -12,8 +12,8 @@
 ### Alpha 2: VM & Server Control
 - [ ] Connect to Proxmox API
 - [ ] Implement VM management
-- [ ] Connect to Server Panel API
-- [ ] Implement server management
+- [x] Connect to Server Panel API
+- [x] Implement server management
 - [ ] Set up SSH connections
 
 ## Phase 2: Beta - Test Automation
