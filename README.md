@@ -74,4 +74,4 @@ For the development checklist, see [CHECKLIST.md](CHECKLIST.md)
 
 ## Contributing
 
-As this project is in active development, we're not yet accepting contributions. Stay tuned for updates!
+As this project is in active development, we're accepting contributions. Please help this project out with ideas and more.
