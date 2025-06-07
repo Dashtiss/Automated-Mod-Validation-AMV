@@ -1,17 +1,20 @@
 # Core Dependencies
-fastapi>=0.100.0
+fastapi>=0.68.0
 uvicorn>=0.15.0
 httpx>=0.24.0
 pydantic>=2.0.0
-python-dotenv>=1.0.0
+python-dotenv>=0.19.0
 
 # Discord Bot Integration
-discord.py>=2.3.0
+discord.py>=2.0.0
 
 # Pterodactyl Panel Integration
-py-dactyl>=0.2.0
+py-dactyl>=0.3.0
+
+# Logging
+python-json-logger>=2.0.0
 
 # Optional Dependencies (currently not used)
-# proxmoxer>=2.0.0
-# paramiko>=3.0.0
-# openssh_wrapper>=0.5.0
+proxmoxer
+paramiko
+openssh_wrapper

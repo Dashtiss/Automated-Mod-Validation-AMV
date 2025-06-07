@@ -37,6 +37,7 @@ status = manager.get_vm_status("proxmox", 100)
 ## Configuration
 
 Required environment variables in your `.env` file:
+
 ```env
 PROXMOX_API_URL=https://your-proxmox-server:8006
 PROXMOX_API_KEY=your-token-name=your-token-value
@@ -45,6 +46,7 @@ PROXMOX_API_KEY=your-token-name=your-token-value
 ## Integration with AMV
 
 The Proxmox manager is used by the AMV Engine to:
+
 1. Create testing environments for mod validation
 2. Manage VM resources efficiently
 3. Clean up resources after testing is complete

@@ -58,7 +58,7 @@ def format_title(info: dict) -> str:
 
 load_dotenv()
 
-VERSION = "0.0.0-alpha.2"
+VERSION = "0.0.0-alpha.5"
 VERSION_NAME = "Alpha"
 
 AUTHORS = ["Dashtiss", "Lightning-Modding"]
@@ -93,18 +93,42 @@ SERVER_MEMORY_LIMIT = int(os.getenv('SERVER_MEMORY_LIMIT', 8192))  # Default to 
 SERVER_DISK_LIMIT = int(os.getenv('SERVER_DISK_LIMIT', 10240))  # Default to 10 GB if not set
 SERVER_CPU_LIMIT = int(os.getenv('SERVER_CPU_LIMIT', 400))  # Default to 100% if not set
 
+API_HOST = "127.0.0.1"  # Default API host
+API_PORT = 8080  # Default API port
 
 def getModProjectInfo() -> dict:
-    
+
     API_URL = "https://api.modrinth.com/v2/"
-    
+
     httpx_client = httpx.Client()
     try:
-        response = httpx_client.get(f"{API_URL}project/{MOD_ID}")
+        response = httpx_client.get(f"{API_URL}project/{MOD_ID}")    
         response.raise_for_status()
         return response.json()
     except httpx.HTTPStatusError as e:
         print(f"HTTP error occurred: {e.response.status_code} - {e.response.text}")
 
+def getLatestVersion() -> str:
+    """
+    Fetches the latest version of the mod from Modrinth.
+    
+    Returns:
+        str: The latest version string.
+    """
+    API_URL = "https://api.modrinth.com/v2/"
+    httpx_client = httpx.Client()
+    
+    try:
+        response = httpx_client.get(f"{API_URL}project/{MOD_ID}/version")
+        response.raise_for_status()
+        versions = response.json()
+        if versions:
+            return versions[0]["id"]  # Assuming the first version is the latest
+        else:
+            return "No versions found"
+    except httpx.HTTPStatusError as e:
+        print(f"HTTP error occurred: {e.response.status_code} - {e.response.text}")
+        return "Error fetching version"
 
+LATEST_VERSION = getLatestVersion() 
 MOD_INFO = getModProjectInfo()
