@@ -207,3 +207,40 @@ class ModVersionManager:
                 exc_info=True
             )
             return False
+        
+    async def download_mod(self, version_id: str) -> bool:
+        """Download a specific version of the mod.
+        
+        Args:
+            version_id: The Modrinth version ID to download
+            
+        Returns:
+            bool: True if download was successful, False otherwise
+        """
+        url = f"https://api.modrinth.com/v2/version/{version_id}/download"
+        async with httpx.AsyncClient() as client:
+            try:
+                # Get the download URL
+                logger.info(f"Getting download URL for version {version_id}")
+                response = await client.get(url)
+                response.raise_for_status()
+                download_url = response.text.strip()
+                
+                # Download the file
+                logger.info(f"Downloading mod from {download_url}")
+                response = await client.get(download_url)
+                response.raise_for_status()
+                
+                # Save the file
+                with open(self.settings.MOD_FILE_PATH, 'wb') as f:
+                    f.write(response.content)
+                
+                logger.info(f"Successfully downloaded mod to {self.settings.MOD_FILE_PATH}")
+                return True
+                
+            except httpx.RequestError as e:
+                logger.error(f"Failed to download mod: {e}")
+                return False
+            except IOError as e:
+                logger.error(f"Failed to save mod file: {e}")
+                return False

@@ -1,3 +1,4 @@
+"""Discord bot for AMV updates."""
 from typing import Optional, Dict, Any
 from discord.ext import commands
 import datetime
@@ -33,6 +34,9 @@ class Bot(commands.Bot):
         self.channel_id: int = int(settings.CHANNEL_ID)  # Ensure channel_id is an integer
         self.embed: Optional[Embed] = None
         self.embed_message: Optional[Message] = None
+        self._shutdown_lock = asyncio.Lock()
+        self._is_shutting_down: bool = False
+        self._http_client: Optional[AsyncClient] = None
         
         # Configure debug logging
         self.logger.debug(f"Initializing bot with channel_id: {self.channel_id}")
@@ -49,30 +53,66 @@ class Bot(commands.Bot):
             self.logger.error(f"Invalid regex pattern: {settings.CHECKER_REGEX}. Error: {e}")
             raise
 
+        # Remove default help command
         self.remove_command('help')
         self.logger.info("Bot initialized with settings.")
-        
-        # Set up signal handlers
-        signal.signal(signal.SIGINT, lambda s, f: asyncio.create_task(self._shutdown()))
 
     async def _shutdown(self) -> None:
         """Handle graceful shutdown of the bot."""
-        self.logger.info("Bot shutdown initiated...")
-        try:
-            if self.embed and self.embed_message:
-                try:
-                    self.embed.title = "Bot Shutting Down"
-                    self.embed.description = "Bot is shutting down. Updates will be halted."
-                    self.embed.color = Colour.orange()
-                    await self.embed_message.edit(embed=self.embed)
-                except Exception as e:
-                    self.logger.error(f"Failed to update shutdown status: {e}")
-            
-            await self.close()
-            self.logger.info("Bot shutdown complete")
-        except Exception as e:
-            self.logger.error(f"Error during bot shutdown: {e}")
+        async with self._shutdown_lock:
+            if self._is_shutting_down:
+                return
 
+            self._is_shutting_down = True
+            self.logger.info("Bot shutdown initiated...")
+            
+            try:
+                # Close HTTP client if it exists
+                if self._http_client:
+                    await self._http_client.aclose()
+                
+                # Update status message if possible
+                if self.embed and self.embed_message:
+                    try:
+                        self.embed.title = "Bot Shutting Down"
+                        self.embed.description = "Bot is shutting down gracefully. Updates will be halted."
+                        self.embed.color = Colour.orange()
+                        await self.embed_message.edit(embed=self.embed)
+                    except Exception as e:
+                        self.logger.error(f"Failed to update shutdown status: {e}")
+                
+                # Cancel all tasks owned by the bot
+                tasks = [t for t in asyncio.all_tasks() 
+                        if t is not asyncio.current_task() 
+                        and not t.done()]
+                
+                if tasks:
+                    self.logger.info(f"Cancelling {len(tasks)} remaining tasks...")
+                    for task in tasks:
+                        task.cancel()
+                    await asyncio.gather(*tasks, return_exceptions=True)
+                
+                # Wait briefly for tasks to cleanly exit
+                await asyncio.sleep(0.5)
+                
+                if not self.is_closed():
+                    await self.close()
+                    
+                self.logger.info("Bot shutdown completed successfully")
+            except Exception as e:
+                self.logger.error(f"Error during bot shutdown: {e}", exc_info=True)
+            finally:
+                self._is_shutting_down = False
+    
+    async def close(self) -> None:
+        """Override close to ensure proper cleanup."""
+        if self.is_closed():
+            return
+        try:
+            await super().close()
+        except Exception as e:
+            self.logger.error(f"Error during bot close: {e}")
+    
     async def setup_channel(self) -> Optional[TextChannel]:
         """Set up and validate the target channel."""
         self.logger.debug("Attempting to set up channel...")
