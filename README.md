@@ -20,30 +20,35 @@ AMV is an automated testing framework designed to validate Minecraft mods throug
 The project is in Phase 2 (Beta), with the following features implemented:
 
 Core Features:
+
 - AsyncIO-based core engine orchestrating all components
 - Comprehensive logging system with JSON formatting
 - Error handling and retry mechanisms across all operations
 - RESTful API endpoints for system control
 
 Server Management:
+
 - Pterodactyl integration for server control
 - Automated server deployment and cleanup
 - Smart mod file management
 - Server status monitoring
 
 Mod Management:
+
 - Automatic mod version tracking
 - Smart loader selection (Fabric/Forge/NeoForge)
 - Mod file uploading and validation
 - Version compatibility checking
 
 Discord Integration:
+
 - Real-time status updates
 - Command handling for server control
 - Embedded status messages
 - Automatic error reporting
 
 In Progress:
+
 - Proxmox VM integration (currently disabled)
 - Web interface for monitoring
 - Client-side automation
